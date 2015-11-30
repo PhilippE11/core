@@ -84,8 +84,11 @@ public class TopicInstanceDao extends OpenInfraValueDao<TopicInstancePojo,
 
             // set the topic characteristic POJO
             pojo.setTopicCharacteristic(TopicCharacteristicDao
-            		.mapToPojoStatically(locale,
-            				ti.getTopicCharacteristic(), null, null));
+            		.mapToPojoStatically(
+            		        locale,
+            				ti.getTopicCharacteristic(),
+            				currentProjectId,
+            				schema));
 
             String metaData = null;
             // check if meta data exists for this topic instance

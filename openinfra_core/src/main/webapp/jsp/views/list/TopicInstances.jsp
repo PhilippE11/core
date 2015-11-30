@@ -21,14 +21,6 @@
 <body>
 	<%@ include file="../../snippets/Menu.jsp" %>
 	
-	<c:set var="metaData" value="${it[0].topicCharacteristic.metaData}"/>
-	<%
-		Object jsonStr = pageContext.getAttribute("metaData");
-		if(jsonStr != null) {
-			pageContext.setAttribute("mdObject", new JSONParser().parse(jsonStr.toString()));
-		}
-	%>
-	<c:set var="columns" value="${mdObject.list_view_columns}"/>
 	
 	
 	<div id="orderAndFilterRow" class="row">
