@@ -5,17 +5,34 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 
 /**
  * The persistent class for the attribute_value_domain database table.
- * 
+ *
  */
 @Entity
 @Table(name="attribute_value_domain")
-@NamedQuery(name="AttributeValueDomain.findAll", query="SELECT a FROM AttributeValueDomain a")
+@NamedQueries({
+    @NamedQuery(name="AttributeValueDomain.findAll",
+        query="SELECT a FROM AttributeValueDomain a"),
+    @NamedQuery(name="AttributeValueDomain.getSuggestion",
+        query="SELECT a FROM AttributeValueDomain a "
+                + "JOIN a.attributeTypeToAttributeTypeGroup.attributeType at "
+                + "JOIN a.attributeTypeToAttributeTypeGroup"
+                    + ".attributeTypeGroupToTopicCharacteristic"
+                    + ".topicCharacteristic tc "
+                + "JOIN a.valueListValue.ptFreeText2"
+                    + ".localizedCharacterStrings l "
+                + "WHERE at.id = :atId AND "
+                    + "tc.id = :tcId AND "
+                    + "(l.ptLocale = :qLocale OR l.ptLocale = :xLocale) AND "
+                    + "LOWER(l.freeText) LIKE LOWER(:qString) "
+                + "ORDER BY LOWER(l.freeText)")
+})
 public class AttributeValueDomain extends OpenInfraModelObject
     implements Serializable {
 	private static final long serialVersionUID = 1L;

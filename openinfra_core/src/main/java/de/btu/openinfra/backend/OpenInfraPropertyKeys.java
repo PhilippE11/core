@@ -70,6 +70,11 @@ public enum OpenInfraPropertyKeys {
     DEFAULT_ORDER("de.btu.openinfra.backend.order"),
 
     /**
+     * This variable defines the maximum number of results for suggestion.
+     */
+    MAX_SUGGESTION("de.btu.openinfra.backend.suggestion.maxResults"),
+
+    /**
      * This variable defines the default file path for unix key.
      */
     UNIX_FILE_PATH("de.btu.openinfra.backend.unix.file.path"),
@@ -97,7 +102,34 @@ public enum OpenInfraPropertyKeys {
 	/**
 	 * This variable defines the default image popup dimension.
 	 */
-	IMG_POPUP_DIMENSION("de.btu.openinfra.backend.img.popup.dimension");
+	IMG_POPUP_DIMENSION("de.btu.openinfra.backend.img.popup.dimension"),
+
+	/**
+     * This variable defines the URL to the Solr server.
+     */
+    SOLR_URL("de.btu.openinfra.backend.solr.url"),
+
+    /**
+     * This variable defines the name of the Solr core.
+     */
+    SOLR_CORE("de.btu.openinfra.backend.solr.core"),
+
+    /**
+     * This variable defines the index window size for indexing projects.
+     */
+    SOLR_INDEX_WINDOW(
+            "de.btu.openinfra.backend.solr.indexWindow"),
+
+    /**
+     * This variable defines the default fuzzy parameter.
+     */
+    SOLR_DEFAULT_FUZZY("de.btu.openinfra.backend.solr.defaultFuzzy"),
+
+    /**
+     * This variable defines the default maximum number of results per request
+     */
+    SOLR_DEFAULT_RESULTS_PER_PAGE(
+            "de.btu.openinfra.backend.solr.defaultResultsPerPage");
 
 	private String key;
 	private OpenInfraPropertyKeys(String key) {

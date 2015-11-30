@@ -96,7 +96,7 @@ public class EntityManagerFactoryCache {
         	try {
         		cache.get(new CacheTuple(
         				OpenInfraApplication.PERSISTENCE_CONTEXT,
-        				createProperties(null, OpenInfraSchemas.FILE)));
+        				createProperties(null, OpenInfraSchemas.FILES)));
         	} catch(ExecutionException ee) {
         		ee.printStackTrace();
         	}
@@ -217,7 +217,7 @@ public class EntityManagerFactoryCache {
         	currentSchema += OpenInfraPropertyValues.RBAC_SEARCH_PATH.getValue()
         	+ "," + OpenInfraPropertyValues.SEARCH_PATH.getValue();
         	break;
-        case FILE:
+        case FILES:
         	currentSchema +=
         		OpenInfraPropertyValues.FILE_SEARCH_PATH.getValue() +
         		"," + OpenInfraPropertyValues.SEARCH_PATH.getValue();

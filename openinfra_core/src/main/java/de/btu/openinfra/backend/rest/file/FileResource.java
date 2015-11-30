@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -184,8 +185,11 @@ public class FileResource {
 	}
 
 	/**
-	 * You will need to install ufraw under Linux-based OS when you want
-	 * to support DNG images.
+	 * You'll need to install ufraw under Linux-based OS when you want to
+	 * support DNG images.
+	 *
+	 * You'll need to install ghostview in order to support PDF thumbnail
+	 * generation.
 	 *
 	 * @param uriInfo
 	 * @param request
@@ -293,6 +297,33 @@ public class FileResource {
     			OpenInfraHttpMethod.valueOf(request.getMethod()),
     			uriInfo, null, result);
 		return fp;
+	}
+
+
+	/**
+	 * A resource to support url-based file upload. The URL should be URL
+	 * encoded!
+	 *
+	 * @param fileurl the URL of the file URL encoded
+	 * @return a file pojo
+	 */
+	@POST
+	@Path("/urlupload")
+	public FilePojo uploadUrlFile(
+    		@Context UriInfo uriInfo,
+    		@Context HttpServletRequest request,
+    		@QueryParam("fileurl") String fileurl) {
+		String fileName = FilenameUtils.getBaseName(fileurl);
+		String extension = FilenameUtils.getExtension(fileurl);
+		if(extension != null && !extension.equals("")) {
+			fileName += "." + extension;
+		}
+	    try {
+			return uploadFile(uriInfo, request, fileName,
+					new URL(fileurl).openStream());
+		} catch (IOException e) {
+			throw new OpenInfraWebException(e);
+		}
 	}
 
 	/**

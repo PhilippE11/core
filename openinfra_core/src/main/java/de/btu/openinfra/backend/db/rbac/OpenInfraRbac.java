@@ -408,7 +408,7 @@ public abstract class OpenInfraRbac<
 		case WEBAPP:
 			return;
 
-		case FILE:
+		case FILES:
 			return;
 		}
 

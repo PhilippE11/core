@@ -119,4 +119,20 @@ public class TopicCharacteristicRbac extends OpenInfraValueRbac<
 		}
 		return pojos;
 	}
+
+	public List<String> getSuggestion(
+            UriInfo uriInfo,
+            OpenInfraHttpMethod httpMethod,
+            Locale locale,
+            UUID topicCharacteristicId,
+            UUID attributeTypeId,
+            String qString) {
+        checkPermission(httpMethod, uriInfo);
+        return new TopicCharacteristicDao(currentProjectId, schema)
+            .getSuggestion(
+                    locale,
+                    topicCharacteristicId,
+                    attributeTypeId,
+                    qString);
+    }
 }

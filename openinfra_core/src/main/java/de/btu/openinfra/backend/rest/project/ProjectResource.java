@@ -112,6 +112,7 @@ public class ProjectResource {
 	 * This method delivers a list of sub projects specified by the current
 	 * project id in only one hierarchy level.
 	 *
+	 *
 	 * @param projectId the id of the current project
 	 * @param offset    the number where to start
 	 * @param size      the size of items to provide

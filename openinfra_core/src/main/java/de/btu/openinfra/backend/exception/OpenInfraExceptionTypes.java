@@ -74,7 +74,9 @@ public enum OpenInfraExceptionTypes {
 	        + "found."),
 
 	SOLR_SERVER_NOT_FOUND("The connection to the Solr server could not be "
-	        + "established.");
+	        + "established."),
+
+	PASSWORD_IN_BLACKLIST("The used password is in blacklist.");
 
     private String msg;
 

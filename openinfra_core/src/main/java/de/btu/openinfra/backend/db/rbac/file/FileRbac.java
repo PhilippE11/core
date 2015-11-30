@@ -16,7 +16,7 @@ import de.btu.openinfra.backend.rest.rbac.SubjectResource;
 public class FileRbac extends OpenInfraRbac<FilePojo, File, FileDao> {
 
 	public FileRbac() {
-		super(null, OpenInfraSchemas.FILE, FileDao.class);
+		super(null, OpenInfraSchemas.FILES, FileDao.class);
 	}
 
 	public long getFilesCountBySubject(

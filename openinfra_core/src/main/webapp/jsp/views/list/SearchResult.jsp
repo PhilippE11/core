@@ -152,20 +152,22 @@
 		    $("#results").append("<tr id=\"" + tmpLabel + "\"></tr>");
 		    
 		    for (var key in result) {
-        		if (key == "highlight") {
-        		    var text = "";
-        		    for (var hl in result[key]) {
-        		    	text += hl +":"+ result[key][hl] + " ... ";
-        		    }
-        		    
-        		    $("#"+ tmpLabel).append("<td>"+ text.substring(0, text.length - 4) +"</td>");
-        		    
-		        } else {
-		            var res = result[key];
-		            if(key =="topicInstanceId") {
-		                res = "<a href=\""+ tiPath + result["projectId"] + "/topicinstances/" + result[key] + "/topic\" >"+ res +"</a>";
-		            }
-		            $("#"+tmpLabel).append("<td>"+ res +"</td>");
+		        if (key != "uuid" && key != "trid") {
+	        		if (key == "highlight") {
+	        		    var text = "";
+	        		    for (var hl in result[key]) {
+	        		    	text += hl +":"+ result[key][hl] + " ... ";
+	        		    }
+	        		    
+	        		    $("#"+ tmpLabel).append("<td>"+ text.substring(0, text.length - 4) +"</td>");
+	        		    
+			        } else {
+			            var res = result[key];
+			            if(key =="topicInstanceId") {
+			                res = "<a href=\""+ tiPath + result["projectId"] + "/topicinstances/" + result[key] + "/topic\" >"+ res +"</a>";
+			            }
+			            $("#"+tmpLabel).append("<td>"+ res +"</td>");
+			        }
 		        }
 		    }
 		    

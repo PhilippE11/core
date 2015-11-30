@@ -22,12 +22,13 @@ import de.btu.openinfra.backend.db.daos.PtLocaleDao;
 import de.btu.openinfra.backend.db.pojos.TopicGeomzPojo;
 import de.btu.openinfra.backend.db.pojos.project.TopicInstancePojo;
 import de.btu.openinfra.backend.db.rbac.OpenInfraHttpMethod;
+import de.btu.openinfra.backend.db.rbac.TopicCharacteristicRbac;
 import de.btu.openinfra.backend.db.rbac.TopicGeomzRbac;
 import de.btu.openinfra.backend.db.rbac.TopicInstanceRbac;
 import de.btu.openinfra.backend.rest.OpenInfraResponseBuilder;
 
 @Path(OpenInfraResponseBuilder.REST_URI_PROJECTS + "/topiccharacteristics/"
-		+ "{topicCharacteristicId}/topicinstances")
+		+ "{topicCharacteristicId}/")
 @Produces({MediaType.APPLICATION_JSON + OpenInfraResponseBuilder.JSON_PRIORITY
     + OpenInfraResponseBuilder.UTF8_CHARSET,
     MediaType.APPLICATION_XML + OpenInfraResponseBuilder.XML_PRIORITY
@@ -52,6 +53,7 @@ public class TopicCharacteristicResource {
 	 * @return
 	 */
 	@GET
+	@Path("topicinstances")
 	public List<TopicInstancePojo> getTopicInstances(
 			@Context UriInfo uriInfo,
 			@Context HttpServletRequest request,
@@ -96,7 +98,7 @@ public class TopicCharacteristicResource {
 	}
 
 	@GET
-	@Path("count")
+	@Path("topicinstances/count")
 	@Produces({MediaType.TEXT_PLAIN})
 	public long getTopicInstancesCount(
 			@Context UriInfo uriInfo,
@@ -124,7 +126,7 @@ public class TopicCharacteristicResource {
 	 * @return
 	 */
 	@GET
-    @Path("geomz")
+    @Path("topicinstances/geomz")
     public List<TopicGeomzPojo> getTopicInstancesGeomz(
     		@Context UriInfo uriInfo,
     		@Context HttpServletRequest request,
@@ -157,7 +159,7 @@ public class TopicCharacteristicResource {
      * @return
      */
     @GET
-    @Path("geomz/count")
+    @Path("topicinstances/geomz/count")
     public long getTopicInstancesGeomzCount(
     		@Context UriInfo uriInfo,
     		@Context HttpServletRequest request,
@@ -172,5 +174,47 @@ public class TopicCharacteristicResource {
                 		OpenInfraHttpMethod.valueOf(request.getMethod()),
 						uriInfo,
 						topicCharacteristicId);
+    }
+
+    /**
+     * This resource will return a list of attribute values for a given query
+     * string. The list will only contain values that belong to a specified
+     * topic characteristic and a specified attribute type. The localization of
+     * the string will depend on the requested language.
+     *
+     * @param uriInfo
+     * @param request
+     * @param language              The language of the query string.
+     * @param projectId             The project id ...
+     * @param topicCharacteristicId The topic characteristic id the values
+     *                              should be part of.
+     * @param attributeTypeId       The attribute type id the values should be
+     *                              part of. The attribute type must be used in
+     *                              the topic characteristic.
+     * @param qString               The query string that should be searched
+     *                              for.
+     * @return                      A list of strings that match to the
+     *                              specified parameter or null if the locale
+     *                              and / or the qString is not specified.
+     */
+    @GET
+    @Path("/attributetypes/{attributeTypeId}/suggest")
+    public List<String> getSuggestion(
+            @Context UriInfo uriInfo,
+            @Context HttpServletRequest request,
+            @QueryParam("language") String language,
+            @PathParam("projectId") UUID projectId,
+            @PathParam("topicCharacteristicId") UUID topicCharacteristicId,
+            @PathParam("attributeTypeId") UUID attributeTypeId,
+            @QueryParam("q") String qString) {
+        return new TopicCharacteristicRbac(
+                projectId,
+                OpenInfraSchemas.PROJECTS).getSuggestion(
+                        uriInfo,
+                        OpenInfraHttpMethod.valueOf(request.getMethod()),
+                        PtLocaleDao.forLanguageTag(language),
+                        topicCharacteristicId,
+                        attributeTypeId,
+                        qString);
     }
 }

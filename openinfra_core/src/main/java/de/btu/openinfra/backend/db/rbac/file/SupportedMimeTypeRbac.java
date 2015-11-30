@@ -10,7 +10,7 @@ public class SupportedMimeTypeRbac extends OpenInfraRbac<
 	SupportedMimeTypePojo, SupportedMimeType, SupportedMimeTypeDao> {
 
 	public SupportedMimeTypeRbac() {
-		super(null, OpenInfraSchemas.FILE, SupportedMimeTypeDao.class);
+		super(null, OpenInfraSchemas.FILES, SupportedMimeTypeDao.class);
 	}
 
 }

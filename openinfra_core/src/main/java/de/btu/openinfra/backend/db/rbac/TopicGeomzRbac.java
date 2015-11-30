@@ -50,7 +50,7 @@ public class TopicGeomzRbac {
 						httpMethod,
 						uriInfo);
 		return new TopicGeomzDao(
-				topicCharacteristicId,
+		        currentProjectId,
 				schema,
 				geomType).read(locale, topicCharacteristicId, offset, size);
     }

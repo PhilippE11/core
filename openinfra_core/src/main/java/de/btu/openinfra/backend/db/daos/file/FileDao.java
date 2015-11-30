@@ -19,7 +19,7 @@ import de.btu.openinfra.backend.db.pojos.file.FilesProjectPojo;
 public class FileDao extends OpenInfraDao<FilePojo, File> {
 
 	public FileDao() {
-		super(null, OpenInfraSchemas.FILE, File.class);
+		super(null, OpenInfraSchemas.FILES, File.class);
 	}
 
 	public FileDao(UUID currentProject, OpenInfraSchemas schema) {
@@ -39,7 +39,8 @@ public class FileDao extends OpenInfraDao<FilePojo, File> {
 		if(pojo.getSubject().equals(subject)) {
 			return delete(file);
 		} else {
-			// TODO Better make use of OpenInfraWebException to lead all exceptions through one class.
+			// TODO Better make use of OpenInfraWebException to lead all
+			// exceptions through one class.
 			throw new WebApplicationException(Status.FORBIDDEN);
 		}
 	}

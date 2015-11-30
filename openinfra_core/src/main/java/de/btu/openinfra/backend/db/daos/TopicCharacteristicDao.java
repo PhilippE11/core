@@ -1,5 +1,6 @@
 package de.btu.openinfra.backend.db.daos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import de.btu.openinfra.backend.OpenInfraProperties;
+import de.btu.openinfra.backend.OpenInfraPropertyKeys;
 import de.btu.openinfra.backend.db.MappingResult;
 import de.btu.openinfra.backend.db.OpenInfraSchemas;
+import de.btu.openinfra.backend.db.jpa.model.AttributeValueDomain;
+import de.btu.openinfra.backend.db.jpa.model.AttributeValueValue;
 import de.btu.openinfra.backend.db.jpa.model.Project;
 import de.btu.openinfra.backend.db.jpa.model.PtLocale;
 import de.btu.openinfra.backend.db.jpa.model.TopicCharacteristic;
@@ -224,4 +229,108 @@ public class TopicCharacteristicDao
         return new MappingResult<TopicCharacteristic>(tc.getId(), tc);
 	}
 
+	/**
+	 * This method returns a list of strings that will match to the specified
+	 * parameters. It will search for attributeValues in the specified
+	 * topicCharacteristic and the specified attributeType for matches to the
+	 * specified string in the specified language. It will also support values
+	 * that have an XX locale.
+	 *
+	 * @param locale                The locale of the query string.
+	 * @param topicCharacteristicId The topic characteristic id the values
+	 *                              should be part of.
+	 * @param attributeTypeId       The attribute type id the values should be
+	 *                              part of. The attribute type must be used in
+	 *                              the topic characteristic.
+	 * @param qString               The query string that should be searched
+	 *                              for.
+	 * @return                      A list of strings that match to the
+	 *                              specified parameter or null if the locale
+	 *                              and / or the qString is not specified.
+	 */
+	public List<String> getSuggestion(
+	        Locale locale,
+	        UUID topicCharacteristicId,
+	        UUID attributeTypeId,
+	        String qString) {
+
+	    // only execute the request if the required parameters are specified
+	    if (locale != null && !qString.equals("")) {
+
+    	    List<String> result = new ArrayList<String>();
+
+    	    // Retrieve the uuid of the xx locale
+            PtLocale localeXX = em.createNamedQuery(
+                    "PtLocale.xx",
+                    PtLocale.class)
+                    .getSingleResult();
+
+    	    // determine if the attribute type contains values or domains
+    	    if (new AttributeTypeDao(currentProjectId, schema).read(
+    	            locale, attributeTypeId).getDomain() == null) {
+
+    	        // create the native query and add necessary parameters
+    	        List<AttributeValueValue> qResult = em.createNamedQuery(
+    	                AttributeValueValue.class.getSimpleName()
+    	                    + ".getSuggestion",
+    	                AttributeValueValue.class)
+    	                .setParameter("tcId", topicCharacteristicId)
+    	                .setParameter("atId", attributeTypeId)
+    	                .setParameter("qLocale",
+    	                        new PtLocaleDao(currentProjectId, schema)
+    	                            .read(locale))
+                        .setParameter("xLocale", localeXX)
+                        .setParameter("qString", qString + "%")
+                        .setMaxResults(Integer.parseInt(
+                                OpenInfraProperties.getProperty(
+                                        OpenInfraPropertyKeys.MAX_SUGGESTION
+                                            .getKey())))
+                        .getResultList();
+
+    	        // get the result and save it
+    	        for(AttributeValueValue value : qResult) {
+    	            // save the result in the result list
+    	            result.add(value.getPtFreeText()
+    	                    .getLocalizedCharacterStrings().get(0)
+    	                    .getFreeText());
+    	        }
+    	    } else {
+    	        // create the native query and add necessary parameters
+                List<AttributeValueDomain> qResult = em.createNamedQuery(
+                        AttributeValueDomain.class.getSimpleName()
+                            + ".getSuggestion",
+                        AttributeValueDomain.class)
+                        .setParameter("tcId", topicCharacteristicId)
+                        .setParameter("atId", attributeTypeId)
+                        .setParameter("qLocale",
+                                new PtLocaleDao(currentProjectId, schema)
+                                    .read(locale))
+                        .setParameter("xLocale", localeXX)
+                        .setParameter("qString", qString + "%")
+                        .setMaxResults(Integer.parseInt(
+                                OpenInfraProperties.getProperty(
+                                        OpenInfraPropertyKeys.MAX_SUGGESTION
+                                            .getKey())))
+                        .getResultList();
+
+                // get the result and save it
+                for(AttributeValueDomain value : qResult) {
+                    // We can not use a DISTINCT in the query because JPA
+                    // returns the whole object that will always be different.
+                    // So we check if the value is already in the result list.
+                    if (!result.contains(value.getValueListValue()
+                            .getPtFreeText2().getLocalizedCharacterStrings()
+                            .get(0).getFreeText())) {
+                        // save the result in the result list
+                        result.add(value.getValueListValue().getPtFreeText2()
+                                .getLocalizedCharacterStrings().get(0)
+                                .getFreeText());
+                    }
+                }
+    	    }
+    	    return result;
+	    } else {
+	        return null;
+	    }
+	}
 }

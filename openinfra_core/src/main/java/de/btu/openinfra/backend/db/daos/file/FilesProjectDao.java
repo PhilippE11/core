@@ -20,7 +20,7 @@ public class FilesProjectDao extends
 	}
 
 	public FilesProjectDao() {
-		super(null, OpenInfraSchemas.FILE, FilesProject.class, File.class);
+		super(null, OpenInfraSchemas.FILES, FilesProject.class, File.class);
 	}
 
 	public List<FilesProjectPojo> readByProject(UUID project) {

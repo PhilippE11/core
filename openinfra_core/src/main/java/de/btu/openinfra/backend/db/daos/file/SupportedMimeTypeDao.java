@@ -13,7 +13,7 @@ public class SupportedMimeTypeDao extends
 	OpenInfraDao<SupportedMimeTypePojo, SupportedMimeType> {
 
 	public SupportedMimeTypeDao() {
-		super(null, OpenInfraSchemas.FILE, SupportedMimeType.class);
+		super(null, OpenInfraSchemas.FILES, SupportedMimeType.class);
 	}
 
 	public SupportedMimeTypeDao(UUID currentProject, OpenInfraSchemas schema) {

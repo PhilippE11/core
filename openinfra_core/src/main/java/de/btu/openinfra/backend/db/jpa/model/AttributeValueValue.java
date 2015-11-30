@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -16,7 +17,22 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="attribute_value_value")
-@NamedQuery(name="AttributeValueValue.findAll", query="SELECT a FROM AttributeValueValue a")
+@NamedQueries({
+    @NamedQuery(name="AttributeValueValue.findAll",
+        query="SELECT a FROM AttributeValueValue a"),
+    @NamedQuery(name="AttributeValueValue.getSuggestion",
+        query="SELECT a FROM AttributeValueValue a "
+                + "JOIN a.attributeTypeToAttributeTypeGroup.attributeType at "
+                + "JOIN a.attributeTypeToAttributeTypeGroup"
+                    + ".attributeTypeGroupToTopicCharacteristic"
+                    + ".topicCharacteristic tc "
+                + "JOIN a.ptFreeText.localizedCharacterStrings l "
+                + "WHERE at.id = :atId AND "
+                    + "tc.id = :tcId AND "
+                    + "(l.ptLocale = :qLocale OR l.ptLocale = :xLocale) AND "
+                    + "LOWER(l.freeText) LIKE LOWER(:qString) "
+                + "ORDER BY LOWER(l.freeText)")
+})
 public class AttributeValueValue extends OpenInfraModelObject
     implements Serializable {
 	private static final long serialVersionUID = 1L;

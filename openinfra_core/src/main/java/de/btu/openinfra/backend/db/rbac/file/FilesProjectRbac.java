@@ -17,7 +17,7 @@ public class FilesProjectRbac extends OpenInfraValueRbac<
 FilesProjectPojo, FilesProject, File, FilesProjectDao> {
 
 	public FilesProjectRbac() {
-		super(null, OpenInfraSchemas.FILE, File.class, FilesProjectDao.class);
+		super(null, OpenInfraSchemas.FILES, File.class, FilesProjectDao.class);
 	}
 
 	public List<FilesProjectPojo> readByProject(

@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -57,6 +58,7 @@ public class WebappProjectResource {
 				new WebappProjectDao().createOrUpdate(pojo, webappProjectId));
 	}
 
+	@POST
 	public Response post(
 		@Context UriInfo uriInfo,
 		@Context HttpServletRequest request,
