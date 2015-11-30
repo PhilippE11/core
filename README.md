@@ -36,7 +36,7 @@ OpenInfRA provides a file upload. This upload requires [ImageMagick](http://www.
 This section shows some starting points and describes a few details. _Project_ and _TopicCharacteristic_ are used as running examples. As the name states, 'Project' refers to an OpenInfRA project. A 'TopicCharacteristic' is an abstract container which groups a set of objects by the description and consolidation of specific attributes. An object is called _TopicInstance_ and it defines attribute values consolidated by a 'TopicCharacteristic'. This leads to the following correlation: a set of TopicInstances are type of a specific TopicCharacteristic.
 
 ## Model
-The following picture shows the 'Project' and the 'TopicCharacteristic' as _model_ _objects_. 'Model objects' refer to the persistence layer.
+The following picture shows the 'Project' and the 'TopicCharacteristic' as _model_ _objects_. 'Model objects' refer to the persistence layer. Native SQL queries or JPA queries schould be placed here. This helps to keep the code nice and clean.
 
 ![OpenInfRA Model](https://github.com/OpenInfRA/core/blob/master/img/model.png "OpenInfRA Model")
 
@@ -51,9 +51,27 @@ Database access is utilized by means of a _DAO_ _pattern_. There exists a DAO cl
 ![OpenInfRA DAO](https://github.com/OpenInfRA/core/blob/master/img/dao.png "OpenInfRA DAO")
 
 ## Entity Manager
-The _entity_ _manager_ is very impartant for the DAO classes and the reaction time of the application since it utilizes the database access. Thus, each DAO class uses its own 'entity manager'. In order to provide fast access it exists an _EntityManagerFactoryCache_ which provides administation of 'entity manager' objects for DAO classes.
+The _entity_ _manager_ is very impartant for the DAO classes and the reaction time of the application since it utilizes the database access. Each DAO class uses its own 'entity manager'. In order to provide fast access it exists an _EntityManagerFactoryCache_ which provides the administation of 'entity manager' objects for DAO classes.
 
 ![OpenInfRA EM](https://github.com/OpenInfRA/core/blob/master/img/em.png "OpenInfRA EM")
+
+## Database Schemas
+OpenInfRA provides different _database_ _schemas_. Each 'database schema' is optimized for specific needs:
+- _system_: The 'system schema' contains abstract data and information which is used to derive project schemas.
+- _project_: A 'project schema' contains only project specific data without meta data. There are several project schemas. Each project schema provides its own UUID.
+- _meta data_: The 'meta data schema' contains additional information of a project.
+- _rbac_: The 'rbac schema' contains information for the role-based access control system. This includes user information, roles and permissions.
+- _webapp_: The 'webapp schema' provides additional information for GUI applications.
+- _files_: The 'files schema' provides data of the file upload system.
+- _search_: The 'search schema' provides data of the search engine.
+
+![OpenInfRA Database Schemas](https://github.com/OpenInfRA/core/blob/master/img/schemas.png "OpenInfRA Database Schemas")
+
+Adding a new schema can be done very easy by the following steps:
+- 1. Create schema on the database level.
+- 2. Generate necessary model objects.
+- 3. Create POJO, DAO and RBAC classes.
+- 4. Register resources and URLs in the REST API.
 
 # TODO
 - The JUnit tests have to be extended.
